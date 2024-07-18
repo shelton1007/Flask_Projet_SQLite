@@ -77,23 +77,15 @@ def enregistrer_client():
     conn.close()
     return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
 
-    # Nouvelle route pour la recherche par nom
-@app.route('/fiche_nom', methods=['GET', 'POST'])
-def fiche_nom():
-    if request.method == 'POST':
-        nom = request.form['nom']
-        
-        # Connexion à la base de données
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        
-        # Exécution de la requête SQL pour rechercher le client par nom
-        cursor.execute('SELECT * FROM clients WHERE nom = ?', (nom,))
-        data = cursor.fetchall()
-        conn.close()
-        
-        # Rendre le template HTML et transmettre les données
-        return render_template('/consultation/')
+    @app.route('/fiche_nom/<str:post_id>')
+def Readfiche_2(post_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM clients WHERE nom = ?', (post_id,))
+    data = cursor.fetchall()
+    conn.close()
+    # Rendre le template HTML et transmettre les données
+    return render_template('read_data.html', data=data)
 
 if __name__ == "__main__":
   app.run(debug=True)
